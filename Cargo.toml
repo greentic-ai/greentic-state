@@ -19,13 +19,13 @@ greentic-types = "^0.1.4"
 greentic-interfaces = "^0.4.3"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-thiserror = "1"
+thiserror = "2"
 time = { version = "0.3", features = ["serde", "parsing"] }
 parking_lot = "0.12"
 dashmap = "6"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
-redis = { version = "0.25", features = ["tokio-comp"], optional = true }
-schemars = { version = "0.8", optional = true }
+redis = { version = "0.32", features = ["tokio-comp"], optional = true }
+schemars = { version = "1", optional = true }
 tracing = "0.1"
 
 [dev-dependencies]
