@@ -1,3 +1,6 @@
+[workspace]
+members = [".", "vendor/greentic-interfaces"]
+
 [package]
 name = "greentic-state"
 version = "0.1.0"
@@ -31,4 +34,3 @@ tracing = "0.1"
 [dev-dependencies]
 proptest = "1"
 uuid = { version = "1", features = ["v4"] }
-
