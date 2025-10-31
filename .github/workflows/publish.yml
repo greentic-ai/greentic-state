@@ -1,0 +1,61 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Start Redis
+        run: |
+          docker run -d --rm --name redis-ci -p 6379:6379 redis:7
+          timeout 30s bash -c 'until docker exec redis-ci redis-cli ping >/dev/null 2>&1; do sleep 1; done'
+
+      - name: Tests
+        env:
+          REDIS_URL: redis://127.0.0.1:6379/
+        run: cargo test --workspace --all-features
+
+      - name: Stop Redis
+        if: always()
+        run: docker stop redis-ci
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: lint-test
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Publish crate
+        uses: katyo/publish-crates@v2
+        with:
+          path: .
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          ignore-unpublished-changes: true
+          check-repo: true
+          dry-run: false

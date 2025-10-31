@@ -1,0 +1,10 @@
+[package]
+name = "greentic-interfaces"
+version = "0.4.3"
+edition = "2021"
+license = "MIT"
+description = "ABI surface placeholder for Greentic interface bindings."
+
+[features]
+default = []
+schema = []
