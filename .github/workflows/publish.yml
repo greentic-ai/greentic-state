@@ -51,6 +51,18 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
+      - name: Fail if path or git dependencies exist
+        run: |
+          cargo metadata --format-version 1 \
+          | jq -r '.packages[] | select(.name=="greentic-state") | .dependencies[] | select(.source==null or (.source|startswith("git+"))) | .name' \
+          | tee /dev/stderr \
+          | (! grep .)
+
+      - name: Cargo publish dry-run (sanity)
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --dry-run
+
       - name: Publish crate
         uses: katyo/publish-crates@v2
         with:
