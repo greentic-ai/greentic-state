@@ -1,7 +1,7 @@
-use greentic_state::{inmemory::InMemoryStateStore, StateKey, StatePath, StateStore, TenantCtx};
+use greentic_state::{StateKey, StatePath, StateStore, TenantCtx, inmemory::InMemoryStateStore};
 use greentic_types::{EnvId, TenantId};
 use proptest::prelude::*;
-use serde_json::{json, Map, Number, Value};
+use serde_json::{Map, Number, Value, json};
 
 fn ctx() -> TenantCtx {
     TenantCtx::new(EnvId::from("dev"), TenantId::from("tenant"))

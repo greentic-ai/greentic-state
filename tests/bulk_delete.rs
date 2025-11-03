@@ -1,4 +1,4 @@
-use greentic_state::{inmemory::InMemoryStateStore, StateKey, StateStore, TenantCtx};
+use greentic_state::{StateKey, StateStore, TenantCtx, inmemory::InMemoryStateStore};
 use greentic_types::{EnvId, TenantId};
 use serde_json::json;
 use uuid::Uuid;
@@ -36,18 +36,24 @@ fn in_memory_bulk_delete() {
     let removed = store.del_prefix(&ctx, prefix).expect("delete prefix");
     assert_eq!(removed, 2);
 
-    assert!(store
-        .get_json(&ctx, prefix, &key_a, None)
-        .expect("get a")
-        .is_none());
-    assert!(store
-        .get_json(&ctx, prefix, &key_b, None)
-        .expect("get b")
-        .is_none());
-    assert!(store
-        .get_json(&ctx, other_prefix, &StateKey::new("node/c"), None)
-        .expect("get c")
-        .is_some());
+    assert!(
+        store
+            .get_json(&ctx, prefix, &key_a, None)
+            .expect("get a")
+            .is_none()
+    );
+    assert!(
+        store
+            .get_json(&ctx, prefix, &key_b, None)
+            .expect("get b")
+            .is_none()
+    );
+    assert!(
+        store
+            .get_json(&ctx, other_prefix, &StateKey::new("node/c"), None)
+            .expect("get c")
+            .is_some()
+    );
 }
 
 #[cfg(feature = "redis")]
@@ -91,16 +97,22 @@ fn redis_bulk_delete_when_available() {
     let removed = store.del_prefix(&ctx, &prefix).expect("redis bulk delete");
     assert_eq!(removed, 2);
 
-    assert!(store
-        .get_json(&ctx, &prefix, &key_a, None)
-        .expect("get redis a")
-        .is_none());
-    assert!(store
-        .get_json(&ctx, &prefix, &key_b, None)
-        .expect("get redis b")
-        .is_none());
-    assert!(store
-        .get_json(&ctx, &other_prefix, &StateKey::new("node/c"), None)
-        .expect("get redis c")
-        .is_some());
+    assert!(
+        store
+            .get_json(&ctx, &prefix, &key_a, None)
+            .expect("get redis a")
+            .is_none()
+    );
+    assert!(
+        store
+            .get_json(&ctx, &prefix, &key_b, None)
+            .expect("get redis b")
+            .is_none()
+    );
+    assert!(
+        store
+            .get_json(&ctx, &other_prefix, &StateKey::new("node/c"), None)
+            .expect("get redis c")
+            .is_some()
+    );
 }

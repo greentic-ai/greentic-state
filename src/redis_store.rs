@@ -1,5 +1,5 @@
 use crate::error::{from_redis, from_serde, internal};
-use crate::key::{fqn, fqn_prefix, FqnKey, StatePath};
+use crate::key::{FqnKey, StatePath, fqn, fqn_prefix};
 use crate::store::StateStore;
 use crate::util::{get_at_path, set_at_path};
 use greentic_types::{GResult, StateKey, TenantCtx};

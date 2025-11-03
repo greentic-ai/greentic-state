@@ -11,6 +11,6 @@ pub mod redis_store;
 pub mod store;
 pub mod util;
 
-pub use crate::key::{fqn, fqn_prefix, FqnKey};
+pub use crate::key::{FqnKey, fqn, fqn_prefix};
 pub use crate::store::StateStore;
 pub use greentic_types::{StateKey, StatePath, TenantCtx};

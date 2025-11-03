@@ -63,7 +63,7 @@ pub fn set_at_path(target: &mut Value, path: &StatePath, new_value: Value) -> GR
             _ => {
                 return Err(invalid_input(format!(
                     "segment `{segment}` cannot be applied to non-container value"
-                )))
+                )));
             }
         }
     }

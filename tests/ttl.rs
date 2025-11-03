@@ -1,4 +1,4 @@
-use greentic_state::{inmemory::InMemoryStateStore, StateKey, StateStore, TenantCtx};
+use greentic_state::{StateKey, StateStore, TenantCtx, inmemory::InMemoryStateStore};
 use greentic_types::{EnvId, TenantId};
 use serde_json::json;
 use std::time::Duration;
