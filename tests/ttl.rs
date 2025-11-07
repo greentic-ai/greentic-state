@@ -6,7 +6,10 @@ use tokio::time::sleep;
 use uuid::Uuid;
 
 fn ctx() -> TenantCtx {
-    TenantCtx::new(EnvId::from("dev"), TenantId::from("tenant"))
+    TenantCtx::new(
+        EnvId::try_from("dev").expect("valid env id"),
+        TenantId::try_from("tenant").expect("valid tenant id"),
+    )
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]

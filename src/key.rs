@@ -68,9 +68,18 @@ mod tests {
     use greentic_types::{EnvId, TeamId, TenantCtx, TenantId, UserId};
 
     fn ctx() -> TenantCtx {
-        TenantCtx::new(EnvId::from("dev"), TenantId::from("tenant"))
-            .with_team(Some(TeamId::from("team")))
-            .with_user(Some(UserId::from("user")))
+        let env =
+            EnvId::try_from("dev").unwrap_or_else(|err| panic!("invalid env id for tests: {err}"));
+        let tenant = TenantId::try_from("tenant")
+            .unwrap_or_else(|err| panic!("invalid tenant id for tests: {err}"));
+        let team = TeamId::try_from("team")
+            .unwrap_or_else(|err| panic!("invalid team id for tests: {err}"));
+        let user = UserId::try_from("user")
+            .unwrap_or_else(|err| panic!("invalid user id for tests: {err}"));
+
+        TenantCtx::new(env, tenant)
+            .with_team(Some(team))
+            .with_user(Some(user))
     }
 
     #[test]

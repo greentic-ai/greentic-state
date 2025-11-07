@@ -4,7 +4,9 @@ use serde_json::json;
 use uuid::Uuid;
 
 fn main() -> greentic_types::GResult<()> {
-    let ctx = TenantCtx::new(EnvId::from("dev"), TenantId::from("example-tenant"));
+    let env = EnvId::try_from("dev").expect("valid env id");
+    let tenant = TenantId::try_from("example-tenant").expect("valid tenant id");
+    let ctx = TenantCtx::new(env, tenant);
     let prefix = format!("flow/{}", Uuid::new_v4());
     let key = StateKey::new("node/state");
 

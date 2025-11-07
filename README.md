@@ -18,7 +18,10 @@ use greentic_state::{inmemory::InMemoryStateStore, StateKey, StatePath, StateSto
 use greentic_types::{EnvId, TenantId};
 use serde_json::json;
 
-let ctx = TenantCtx::new(EnvId::from("dev"), TenantId::from("tenant-123"));
+let ctx = TenantCtx::new(
+    EnvId::try_from("dev").expect("valid env id"),
+    TenantId::try_from("tenant-123").expect("valid tenant id"),
+);
 let prefix = "flow/example";
 let key = StateKey::new("node/state");
 let store = InMemoryStateStore::new();
@@ -100,6 +103,17 @@ Redis uses `SCAN` + batched `DEL`, avoiding blocking the server on large keyspac
 - GitHub Actions workflows:
   - `auto-tag.yml`: tags crates on version bumps merged to `master`.
   - `publish.yml`: fmt/clippy/test + idempotent publish via `katyo/publish-crates@v2`.
+
+### Local checks
+
+Run `ci/local_check.sh` to mirror the main GitHub Actions pipeline before pushing. It handles fmt/clippy/build/tests (spinning up a disposable Redis via Docker when `REDIS_URL` is unset), dependency gate checks, and an optional `cargo publish --dry-run`. Useful toggles:
+
+- `LOCAL_CHECK_ONLINE=1` – enable networked steps such as the publish dry run.
+- `LOCAL_CHECK_STRICT=1` – fail when optional tools are missing instead of skipping.
+- `LOCAL_CHECK_VERBOSE=1` – echo each command (`set -x`).
+- `LOCAL_CHECK_BYPASS=1` – skip the `git pre-push` hook that calls the script.
+
+By default the script runs offline and skips checks whose tooling is unavailable, matching CI behavior as closely as possible without requiring secrets.
 
 ## Stability & Maintenance
 

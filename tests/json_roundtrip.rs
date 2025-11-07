@@ -4,7 +4,10 @@ use proptest::prelude::*;
 use serde_json::{Map, Number, Value, json};
 
 fn ctx() -> TenantCtx {
-    TenantCtx::new(EnvId::from("dev"), TenantId::from("tenant"))
+    TenantCtx::new(
+        EnvId::try_from("dev").expect("valid env id"),
+        TenantId::try_from("tenant").expect("valid tenant id"),
+    )
 }
 
 #[test]
