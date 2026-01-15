@@ -43,6 +43,16 @@ fn in_memory_roundtrip() {
         .expect("get")
         .expect("value");
     assert_eq!(updated, json!({"a": [1, 42, 3], "status": "ready"}));
+
+    let replacement = json!({"a": [9, 8], "status": "replaced"});
+    store
+        .set_json(&ctx, prefix, &key, None, &replacement, None)
+        .expect("replace");
+    let replaced = store
+        .get_json(&ctx, prefix, &key, None)
+        .expect("get")
+        .expect("value");
+    assert_eq!(replaced, replacement);
 }
 
 fn json_strategy() -> impl Strategy<Value = Value> {

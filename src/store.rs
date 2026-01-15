@@ -16,7 +16,8 @@ pub trait StateStore: Send + Sync + 'static {
 
     /// Set the JSON value for `(tenant, prefix, key)`.
     /// When `path` is provided the value is upserted at the JSON Pointer location.
-    /// Passing `ttl_secs` refreshes the expiry; `None` keeps the existing TTL (if any).
+    /// Passing `ttl_secs` refreshes the expiry; `None` keeps the existing TTL (if any),
+    /// while `Some(0)` clears an existing TTL.
     fn set_json(
         &self,
         tenant: &TenantCtx,
