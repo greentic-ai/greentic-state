@@ -1,7 +1,7 @@
 #[cfg(feature = "redis")]
 mod redis_docker {
-    use greentic_state::{StateKey, StateStore, TenantCtx};
     use greentic_state::redis_store::RedisStateStore;
+    use greentic_state::{StateKey, StateStore, TenantCtx};
     use greentic_types::{EnvId, TenantId};
     use serde_json::json;
     use std::env;
@@ -45,7 +45,9 @@ mod redis_docker {
         let name = format!("greentic-state-test-{}", Uuid::new_v4());
 
         let status = Command::new("docker")
-            .args(["run", "-d", "--rm", "--name", &name, "-p", "0:6379", "redis:7"])
+            .args([
+                "run", "-d", "--rm", "--name", &name, "-p", "0:6379", "redis:7",
+            ])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .status()
@@ -119,7 +121,14 @@ mod redis_docker {
         let key = StateKey::new("node/a");
 
         store
-            .set_json(&ctx, &prefix, &key, None, &json!({"hello": "world"}), Some(60))
+            .set_json(
+                &ctx,
+                &prefix,
+                &key,
+                None,
+                &json!({"hello": "world"}),
+                Some(60),
+            )
             .expect("set");
         let loaded = store
             .get_json(&ctx, &prefix, &key, None)
@@ -133,10 +142,24 @@ mod redis_docker {
         assert!(missing.is_none(), "expected deleted key to be gone");
 
         store
-            .set_json(&ctx, &prefix, &StateKey::new("node/b"), None, &json!({"b": 1}), None)
+            .set_json(
+                &ctx,
+                &prefix,
+                &StateKey::new("node/b"),
+                None,
+                &json!({"b": 1}),
+                None,
+            )
             .expect("set b");
         store
-            .set_json(&ctx, &prefix, &StateKey::new("node/c"), None, &json!({"c": 2}), None)
+            .set_json(
+                &ctx,
+                &prefix,
+                &StateKey::new("node/c"),
+                None,
+                &json!({"c": 2}),
+                None,
+            )
             .expect("set c");
         let removed = store.del_prefix(&ctx, &prefix).expect("delete prefix");
         assert!(removed >= 2, "expected prefix delete to remove entries");

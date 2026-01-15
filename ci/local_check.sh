@@ -76,6 +76,16 @@ stop_redis() {
   REDIS_MANAGED=0
 }
 
+stop_redis_ci() {
+  if ! command -v docker >/dev/null 2>&1; then
+    return 0
+  fi
+  if ! docker ps --format '{{.Names}}' | grep -Fxq "redis-ci"; then
+    return 0
+  fi
+  docker stop "redis-ci" >/dev/null 2>&1 || true
+}
+
 trap stop_redis EXIT
 
 start_redis() {
@@ -172,6 +182,7 @@ deps_sanity() {
 publish_dry_run() {
   require_online "cargo publish --dry-run" || return $?
   require_tool cargo || return $?
+  stop_redis_ci
   cargo publish --dry-run
 }
 
