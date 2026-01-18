@@ -23,6 +23,23 @@ Pick a stable naming convention for your flow. For example:
 If all nodes in a flow use the same `prefix`, any node can read the state from
 any other node by using that node's `StateKey`.
 
+### Pack-aware prefix convention (runner)
+
+The runner namespaces state by pack to avoid collisions between packs with the
+same flow ids. Recommended prefix format:
+
+```
+pack/{pack_id}/flow/{flow_id}/run/{run_id}
+```
+
+Examples:
+
+- Flow run state: `pack/pack-42/flow/ingest/run/run-2024-09-13`
+- Suspended session state: `pack/pack-42/session/sess-7f3b2`
+- Per-node state under the same root: prefix
+  `pack/pack-42/flow/ingest/run/run-2024-09-13` with keys
+  `node/fetch`, `node/transform/output`
+
 ## Add (create) state
 
 Use `set_json` with no `StatePath` to write a whole document. The TTL is
